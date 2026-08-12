@@ -71,10 +71,16 @@ typedef struct s_simulation
     long            start_time;
 }   t_simulation;
 
-int	is_valid_number(char *str);
-t_config	parse_args(int argc, char **argv);
-long	ft_atoll(char *str);
-int	is_diigit(char *str);
+// ==== parsing_utils.c ====
+int             is_digit(char *str);
+long            ft_atoll(char *str);
+void            check_digits(char *str);
+void            check_positive(char *str);
+
+// ==== parse_args.c ====
+t_scheduler     parse_scheduler(char *str);
+void            fill_config(t_config *config, char **argv);
+t_config        parse_args(char **argv);
 
 
 #endif
