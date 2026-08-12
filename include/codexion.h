@@ -19,6 +19,7 @@
 # include <unistd.h>
 # include <sys/time.h>
 # include <string.h>
+# include <time.h>
 
 typedef enum e_scheduler
 {
@@ -81,6 +82,10 @@ void            check_positive(char *str);
 t_scheduler     parse_scheduler(char *str);
 void            fill_config(t_config *config, char **argv);
 t_config        parse_args(char **argv);
+
+t_simulation	*init_simulation(t_config config)
+long	get_current_time(void);
+
 
 
 #endif

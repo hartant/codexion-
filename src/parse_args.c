@@ -6,7 +6,7 @@
 /*   By: mbenamar <mbenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/11 21:21:35 by mbenamar          #+#    #+#             */
-/*   Updated: 2026/08/11 21:22:24 by mbenamar         ###   ########.fr       */
+/*   Updated: 2026/08/12 21:12:34 by mbenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ void	fill_config(t_config *config, char **argv)
 t_config	parse_args(char **argv)
 {
 	t_config	config;
-	int			i;
 
 	check_positive(argv[1]);
 	check_digits(argv[2]);
