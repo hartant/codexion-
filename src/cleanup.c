@@ -6,7 +6,7 @@
 /*   By: mbenamar <mbenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/12 19:17:28 by mbenamar          #+#    #+#             */
-/*   Updated: 2026/08/12 19:37:39 by mbenamar         ###   ########.fr       */
+/*   Updated: 2026/08/13 21:29:47 by mbenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,5 +29,6 @@ void	cleanup_simulation(t_simulation *sim)
 	pthread_mutex_destroy(&sim->stop_lock);
 	free(sim->coders);
 	free(sim->dongles);
+	free(sim->dongles[i].waiting);
 	free(sim);
 }

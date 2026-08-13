@@ -27,6 +27,12 @@ typedef enum e_scheduler
     edf
 }   t_scheduler;
 
+typedef struct s_request
+{
+	int		coder_id;
+	long	value;
+}	t_request;
+
 typedef struct s_config
 {
     int             number_of_coders;
@@ -41,13 +47,14 @@ typedef struct s_config
 
 typedef struct s_dongle
 {
-    int             id;
-    pthread_mutex_t lock;
-    pthread_cond_t  cond;
-    int             available;
-    long            last_release_time;
-}   t_dongle;
-
+	int				id;
+	pthread_mutex_t	lock;
+	pthread_cond_t	cond;
+	int				available;
+	long			last_release_time;
+	t_request		*waiting;
+	int				waiting_count;
+}	t_dongle;
 typedef struct s_coder
 {
     int                 id;
@@ -72,20 +79,31 @@ typedef struct s_simulation
     long            start_time;
 }   t_simulation;
 
-// ==== parsing_utils.c ====
+
 int             is_digit(char *str);
 long            ft_atoll(char *str);
 void            check_digits(char *str);
 void            check_positive(char *str);
-
-// ==== parse_args.c ====
 t_scheduler     parse_scheduler(char *str);
 void            fill_config(t_config *config, char **argv);
 t_config        parse_args(char **argv);
-
-t_simulation	*init_simulation(t_config config)
+t_simulation	*init_simulation(t_config config);
 long	get_current_time(void);
-
+void	log_event(t_simulation *sim, int coder_id, char *message);
+void	take_dongle(t_dongle *dongle, long cooldown);
+void	release_dongle(t_dongle *dongle);
+void	coder_take_dongles(t_coder *coder);
+void	coder_compile(t_coder *coder);
+void	coder_debug_refactor(t_coder *coder);
+int		check_and_update_stop(t_coder *coder);
+void	*coder_routine(void *arg);
+int		create_threads(t_simulation *sim);
+void	join_threads(t_simulation *sim);
+long	get_current_time(void);
+void    cleanup_simulation(t_simulation *sim);
+int			has_priority(t_scheduler sched, t_request a, t_request b);
+void		heap_push(t_dongle *d, t_request req, t_scheduler sched);
+t_request	heap_pop(t_dongle *d, t_scheduler sched);
 
 
 #endif
