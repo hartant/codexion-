@@ -6,7 +6,7 @@
 /*   By: mbenamar <mbenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/13 18:41:53 by mbenamar          #+#    #+#             */
-/*   Updated: 2026/08/13 21:34:34 by mbenamar         ###   ########.fr       */
+/*   Updated: 2026/08/13 22:11:56 by mbenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,9 @@ void	coder_compile(t_coder *coder)
 {
 	t_simulation *sim = coder->sim;
 
+	pthread_mutex_lock(&sim->stop_lock);
 	coder->last_compile_start = get_current_time();
+	pthread_mutex_unlock(&sim->stop_lock);
 	log_event(sim, coder->id, "is compiling");
 	usleep(sim->config.time_to_compile * 1000);
 	release_dongle(coder->left_dongle);

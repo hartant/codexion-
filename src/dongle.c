@@ -6,21 +6,20 @@
 /*   By: mbenamar <mbenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/13 00:02:26 by mbenamar          #+#    #+#             */
-/*   Updated: 2026/08/13 21:33:55 by mbenamar         ###   ########.fr       */
+/*   Updated: 2026/08/13 22:04:27 by mbenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/codexion.h"
 
 
-
-#include "../include/codexion.h"
-
 void	take_dongle(t_dongle *dongle, t_coder *coder)
 {
 	t_request		req;
 	long			cooldown;
 	t_scheduler		sched;
+	struct timespec	ts;
+	long			deadline;
 
 	cooldown = coder->sim->config.dongle_cooldown;
 	sched = coder->sim->config.scheduler;
@@ -31,7 +30,12 @@ void	take_dongle(t_dongle *dongle, t_coder *coder)
 	while (dongle->waiting[0].coder_id != coder->id
 		|| !dongle->available
 		|| dongle->last_release_time + cooldown > get_current_time())
-		pthread_cond_wait(&dongle->cond, &dongle->lock);
+	{
+		deadline = dongle->last_release_time + cooldown;
+		ts.tv_sec = deadline / 1000;
+		ts.tv_nsec = (deadline % 1000) * 1000000;
+		pthread_cond_timedwait(&dongle->cond, &dongle->lock, &ts);
+	}
 	heap_pop(dongle, sched);
 	dongle->available = 0;
 	pthread_mutex_unlock(&dongle->lock);

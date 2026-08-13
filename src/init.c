@@ -6,7 +6,7 @@
 /*   By: mbenamar <mbenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/11 22:23:20 by mbenamar          #+#    #+#             */
-/*   Updated: 2026/08/13 21:41:26 by mbenamar         ###   ########.fr       */
+/*   Updated: 2026/08/13 22:11:40 by mbenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ t_simulation	*init_simulation(t_config config)
 		sim->coders[i].left_dongle = &sim->dongles[i];
 		sim->coders[i].right_dongle = &sim->dongles[(i + 1)
 			% config.number_of_coders];
-		sim->coders[i].last_compile_start = 0;
+		sim->coders[i].last_compile_start = sim->start_time;
 		sim->coders[i].compiles_done = 0;
 		sim->coders[i].sim = sim;
 		i++;

@@ -6,7 +6,7 @@
 /*   By: mbenamar <mbenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/11 21:23:19 by mbenamar          #+#    #+#             */
-/*   Updated: 2026/08/13 21:04:42 by mbenamar         ###   ########.fr       */
+/*   Updated: 2026/08/13 22:10:44 by mbenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ int	main(int argc, char **argv)
 {
 	t_config		config;
 	t_simulation	*sim;
+	pthread_t		monitor_thread;
 
 	if (argc != 9)
 	{
@@ -57,6 +58,12 @@ int	main(int argc, char **argv)
 		printf("ERROR: initialization failed\n");
 		return (1);
 	}
+	if (pthread_create(&monitor_thread, NULL, monitor_routine, sim) != 0)
+	{
+		printf("ERROR: monitor thread creation failed\n");
+		cleanup_simulation(sim);
+		return (1);
+	}
 	if (!create_threads(sim))
 	{
 		printf("ERROR: thread creation failed\n");
@@ -64,6 +71,7 @@ int	main(int argc, char **argv)
 		return (1);
 	}
 	join_threads(sim);
+	pthread_join(monitor_thread, NULL);
 	cleanup_simulation(sim);
 	return (0);
 }
