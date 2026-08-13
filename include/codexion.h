@@ -90,7 +90,7 @@ t_config        parse_args(char **argv);
 t_simulation	*init_simulation(t_config config);
 long	get_current_time(void);
 void	log_event(t_simulation *sim, int coder_id, char *message);
-void	take_dongle(t_dongle *dongle, long cooldown);
+void	take_dongle(t_dongle *dongle, t_coder *coder);
 void	release_dongle(t_dongle *dongle);
 void	coder_take_dongles(t_coder *coder);
 void	coder_compile(t_coder *coder);
@@ -104,6 +104,11 @@ void    cleanup_simulation(t_simulation *sim);
 int			has_priority(t_scheduler sched, t_request a, t_request b);
 void		heap_push(t_dongle *d, t_request req, t_scheduler sched);
 t_request	heap_pop(t_dongle *d, t_scheduler sched);
+long		get_request_value(t_coder *coder);
+int	check_coder_burnout(t_coder *coder);
+int	check_all_burnout(t_simulation *sim);
+void	*monitor_routine(void *arg);
+
 
 
 #endif

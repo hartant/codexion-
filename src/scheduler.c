@@ -6,15 +6,22 @@
 /*   By: mbenamar <mbenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/13 21:12:43 by mbenamar          #+#    #+#             */
-/*   Updated: 2026/08/13 21:27:59 by mbenamar         ###   ########.fr       */
+/*   Updated: 2026/08/13 21:33:28 by mbenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/codexion.h"
 
+long	get_request_value(t_coder *coder)
+{
+	if (coder->sim->config.scheduler == fifo)
+		return (get_current_time());
+	return (coder->last_compile_start + coder->sim->config.time_to_burnout);
+}
+
 int	has_priority(t_scheduler sched, t_request a, t_request b)
 {
-	if (sched == FIFO)
+	if (sched == fifo)
 		return (a.value < b.value);
 	return (a.value < b.value);
 }

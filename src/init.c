@@ -6,7 +6,7 @@
 /*   By: mbenamar <mbenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/11 22:23:20 by mbenamar          #+#    #+#             */
-/*   Updated: 2026/08/13 21:29:28 by mbenamar         ###   ########.fr       */
+/*   Updated: 2026/08/13 21:41:26 by mbenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,6 @@ t_simulation	*init_simulation(t_config config)
 	sim->config = config;
 	sim->coders = malloc(sizeof(t_coder) * config.number_of_coders);
 	sim->dongles = malloc(sizeof(t_dongle) * config.number_of_coders);
-	sim->dongles[i].waiting = malloc(sizeof(t_request) * config.number_of_coders);
-	sim->dongles[i].waiting_count = 0;
 	if (!sim->coders || !sim->dongles)
 	{
 		free(sim->coders);
@@ -44,6 +42,8 @@ t_simulation	*init_simulation(t_config config)
 		pthread_cond_init(&sim->dongles[i].cond, NULL);
 		sim->dongles[i].available = 1;
 		sim->dongles[i].last_release_time = 0;
+		sim->dongles[i].waiting = malloc(sizeof(t_request) * config.number_of_coders);
+		sim->dongles[i].waiting_count = 0;
 		sim->coders[i].id = i;
 		sim->coders[i].left_dongle = &sim->dongles[i];
 		sim->coders[i].right_dongle = &sim->dongles[(i + 1)

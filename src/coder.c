@@ -6,7 +6,7 @@
 /*   By: mbenamar <mbenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/13 18:41:53 by mbenamar          #+#    #+#             */
-/*   Updated: 2026/08/13 21:02:46 by mbenamar         ###   ########.fr       */
+/*   Updated: 2026/08/13 21:34:34 by mbenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,18 +18,17 @@ void	coder_take_dongles(t_coder *coder)
 
 	if (coder->id % 2 == 0)
 	{
-		take_dongle(coder->right_dongle, sim->config.dongle_cooldown);
-		take_dongle(coder->left_dongle, sim->config.dongle_cooldown);
+		take_dongle(coder->right_dongle, coder);
+		take_dongle(coder->left_dongle, coder);
 	}
 	else
 	{
-		take_dongle(coder->left_dongle, sim->config.dongle_cooldown);
-		take_dongle(coder->right_dongle, sim->config.dongle_cooldown);
+		take_dongle(coder->left_dongle, coder);
+		take_dongle(coder->right_dongle, coder);
 	}
 	log_event(sim, coder->id, "has taken a dongle");
 	log_event(sim, coder->id, "has taken a dongle");
 }
-
 void	coder_compile(t_coder *coder)
 {
 	t_simulation *sim = coder->sim;
