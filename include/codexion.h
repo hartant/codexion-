@@ -112,4 +112,5 @@ int						check_all_burnout(t_simulation *sim);
 void					*monitor_routine(void *arg);
 int						interruptible_sleep(t_simulation *sim, long ms);
 
+
 #endif

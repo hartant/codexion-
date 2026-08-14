@@ -6,16 +6,39 @@
 /*   By: mbenamar <mbenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/11 22:23:20 by mbenamar          #+#    #+#             */
-/*   Updated: 2026/08/14 18:54:25 by mbenamar         ###   ########.fr       */
+/*   Updated: 2026/08/14 23:11:28 by mbenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/codexion.h"
 
-t_simulation	*init_simulation(t_config config)
+static void	init_dongle(t_dongle *dongle, int id, int n)
+{
+	dongle->id = id;
+	pthread_mutex_init(&dongle->lock, NULL);
+	pthread_cond_init(&dongle->cond, NULL);
+	dongle->available = 1;
+	dongle->last_release_time = 0;
+	dongle->waiting = malloc(sizeof(t_request) * n);
+	dongle->waiting_count = 0;
+}
+
+static void	init_coder(t_simulation *sim, int i)
+{
+	int	n;
+
+	n = sim->config.number_of_coders;
+	sim->coders[i].id = i + 1;
+	sim->coders[i].left_dongle = &sim->dongles[i];
+	sim->coders[i].right_dongle = &sim->dongles[(i + 1) % n];
+	sim->coders[i].last_compile_start = sim->start_time;
+	sim->coders[i].compiles_done = 0;
+	sim->coders[i].sim = sim;
+}
+
+static t_simulation	*alloc_simulation(t_config config)
 {
 	t_simulation	*sim;
-	int				i;
 
 	sim = malloc(sizeof(t_simulation));
 	if (!sim)
@@ -30,6 +53,17 @@ t_simulation	*init_simulation(t_config config)
 		free(sim);
 		return (NULL);
 	}
+	return (sim);
+}
+
+t_simulation	*init_simulation(t_config config)
+{
+	t_simulation	*sim;
+	int				i;
+
+	sim = alloc_simulation(config);
+	if (!sim)
+		return (NULL);
 	pthread_mutex_init(&sim->print_lock, NULL);
 	pthread_mutex_init(&sim->stop_lock, NULL);
 	sim->stop = 0;
@@ -37,21 +71,8 @@ t_simulation	*init_simulation(t_config config)
 	i = 0;
 	while (i < config.number_of_coders)
 	{
-		sim->dongles[i].id = i;
-		pthread_mutex_init(&sim->dongles[i].lock, NULL);
-		pthread_cond_init(&sim->dongles[i].cond, NULL);
-		sim->dongles[i].available = 1;
-		sim->dongles[i].last_release_time = 0;
-		sim->dongles[i].waiting = malloc(sizeof(t_request)
-				* config.number_of_coders);
-		sim->dongles[i].waiting_count = 0;
-		sim->coders[i].id = i;
-		sim->coders[i].left_dongle = &sim->dongles[i];
-		sim->coders[i].right_dongle = &sim->dongles[(i + 1)
-			% config.number_of_coders];
-		sim->coders[i].last_compile_start = sim->start_time;
-		sim->coders[i].compiles_done = 0;
-		sim->coders[i].sim = sim;
+		init_dongle(&sim->dongles[i], i, config.number_of_coders);
+		init_coder(sim, i);
 		i++;
 	}
 	return (sim);
@@ -66,7 +87,10 @@ int	interruptible_sleep(t_simulation *sim, long ms)
 	remaining = ms;
 	while (remaining > 0)
 	{
-		chunk = remaining < 2 ? remaining : 2;
+		if (remaining < 2)
+			chunk = remaining;
+		else
+			chunk = 2;
 		usleep(chunk * 1000);
 		remaining -= chunk;
 		pthread_mutex_lock(&sim->stop_lock);

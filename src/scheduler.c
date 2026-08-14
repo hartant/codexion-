@@ -6,9 +6,11 @@
 /*   By: mbenamar <mbenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/13 21:12:43 by mbenamar          #+#    #+#             */
-/*   Updated: 2026/08/14 18:57:00 by mbenamar         ###   ########.fr       */
+/*   Updated: 2026/08/14 23:15:03 by mbenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "../include/codexion.h"
 
 #include "../include/codexion.h"
 
@@ -48,29 +50,23 @@ void	heap_push(t_dongle *d, t_request req, t_scheduler sched)
 	}
 }
 
-t_request	heap_pop(t_dongle *d, t_scheduler sched)
+static void	sift_down(t_dongle *d, int i, t_scheduler sched)
 {
-	t_request	top;
 	t_request	tmp;
-	int			i;
 	int			left;
 	int			right;
 	int			smallest;
 
-	top = d->waiting[0];
-	d->waiting_count--;
-	d->waiting[0] = d->waiting[d->waiting_count];
-	i = 0;
 	while (1)
 	{
 		left = 2 * i + 1;
 		right = 2 * i + 2;
 		smallest = i;
-		if (left < d->waiting_count && has_priority(sched, d->waiting[left],
-				d->waiting[smallest]))
+		if (left < d->waiting_count
+			&& has_priority(sched, d->waiting[left], d->waiting[smallest]))
 			smallest = left;
-		if (right < d->waiting_count && has_priority(sched, d->waiting[right],
-				d->waiting[smallest]))
+		if (right < d->waiting_count
+			&& has_priority(sched, d->waiting[right], d->waiting[smallest]))
 			smallest = right;
 		if (smallest == i)
 			break ;
@@ -79,5 +75,15 @@ t_request	heap_pop(t_dongle *d, t_scheduler sched)
 		d->waiting[smallest] = tmp;
 		i = smallest;
 	}
+}
+
+t_request	heap_pop(t_dongle *d, t_scheduler sched)
+{
+	t_request	top;
+
+	top = d->waiting[0];
+	d->waiting_count--;
+	d->waiting[0] = d->waiting[d->waiting_count];
+	sift_down(d, 0, sched);
 	return (top);
 }

@@ -6,7 +6,7 @@
 /*   By: mbenamar <mbenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/13 18:41:53 by mbenamar          #+#    #+#             */
-/*   Updated: 2026/08/14 18:52:36 by mbenamar         ###   ########.fr       */
+/*   Updated: 2026/08/14 23:04:28 by mbenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,15 +80,17 @@ int	check_and_update_stop(t_coder *coder)
 	t_simulation	*sim;
 	int				i;
 	int				done;
+	int				required;
 
 	sim = coder->sim;
 	pthread_mutex_lock(&sim->stop_lock);
 	coder->compiles_done++;
 	i = 0;
 	done = 1;
+	required = sim->config.number_of_compiles_required;
 	while (i < sim->config.number_of_coders)
 	{
-		if (sim->coders[i].compiles_done < sim->config.number_of_compiles_required)
+		if (sim->coders[i].compiles_done < required)
 			done = 0;
 		i++;
 	}
