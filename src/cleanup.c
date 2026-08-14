@@ -14,7 +14,7 @@
 
 void	cleanup_simulation(t_simulation *sim)
 {
-	int		i;
+	int	i;
 
 	if (!sim)
 		return ;

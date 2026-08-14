@@ -49,7 +49,7 @@ int	check_all_burnout(t_simulation *sim)
 void	*monitor_routine(void *arg)
 {
 	t_simulation	*sim;
-	int		stop;
+	int				stop;
 
 	sim = (t_simulation *)arg;
 	pthread_mutex_lock(&sim->stop_lock);

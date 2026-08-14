@@ -41,9 +41,9 @@ void	join_threads(t_simulation *sim)
 
 int	main(int argc, char **argv)
 {
-	t_config	config;
+	t_config		config;
 	t_simulation	*sim;
-	pthread_t	monitor_thread;
+	pthread_t		monitor_thread;
 
 	if (argc != 9)
 	{

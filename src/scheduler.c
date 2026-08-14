@@ -52,10 +52,10 @@ t_request	heap_pop(t_dongle *d, t_scheduler sched)
 {
 	t_request	top;
 	t_request	tmp;
-	int		i;
-	int		left;
-	int		right;
-	int		smallest;
+	int			i;
+	int			left;
+	int			right;
+	int			smallest;
 
 	top = d->waiting[0];
 	d->waiting_count--;
