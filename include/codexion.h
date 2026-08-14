@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   codexion.h                                          :+:      :+:    :+:   */
+/*   codexion.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbenamar <mbenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/08/08 18:19:49 by mbenamar          #+#    #+#             */
-/*   Updated: 2026/08/10 22:14:18 by mbenamar         ###   ########.fr       */
+/*   Created: 2026/08/14 23:25:11 by mbenamar          #+#    #+#             */
+/*   Updated: 2026/08/14 23:25:27 by mbenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,4 @@ int						check_coder_burnout(t_coder *coder);
 int						check_all_burnout(t_simulation *sim);
 void					*monitor_routine(void *arg);
 int						interruptible_sleep(t_simulation *sim, long ms);
-
-
 #endif
