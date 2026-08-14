@@ -6,7 +6,7 @@
 /*   By: mbenamar <mbenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/12 19:17:28 by mbenamar          #+#    #+#             */
-/*   Updated: 2026/08/13 21:29:47 by mbenamar         ###   ########.fr       */
+/*   Updated: 2026/08/14 18:47:04 by mbenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	cleanup_simulation(t_simulation *sim)
 {
-	int	i;
+	int		i;
 
 	if (!sim)
 		return ;
@@ -23,7 +23,7 @@ void	cleanup_simulation(t_simulation *sim)
 	{
 		pthread_mutex_destroy(&sim->dongles[i].lock);
 		pthread_cond_destroy(&sim->dongles[i].cond);
-		free(sim->dongles[i].waiting);   // <-- fri kol wahda JOWA loop
+		free(sim->dongles[i].waiting);
 		i++;
 	}
 	pthread_mutex_destroy(&sim->print_lock);

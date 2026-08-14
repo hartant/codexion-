@@ -6,7 +6,7 @@
 /*   By: mbenamar <mbenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/13 21:12:43 by mbenamar          #+#    #+#             */
-/*   Updated: 2026/08/13 21:33:28 by mbenamar         ###   ########.fr       */
+/*   Updated: 2026/08/14 18:57:00 by mbenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ int	has_priority(t_scheduler sched, t_request a, t_request b)
 
 void	heap_push(t_dongle *d, t_request req, t_scheduler sched)
 {
-	int	i;
-	int	parent;
+	int			i;
+	int			parent;
 	t_request	tmp;
 
 	d->waiting[d->waiting_count] = req;
@@ -52,10 +52,10 @@ t_request	heap_pop(t_dongle *d, t_scheduler sched)
 {
 	t_request	top;
 	t_request	tmp;
-	int			i;
-	int			left;
-	int			right;
-	int			smallest;
+	int		i;
+	int		left;
+	int		right;
+	int		smallest;
 
 	top = d->waiting[0];
 	d->waiting_count--;
@@ -66,11 +66,11 @@ t_request	heap_pop(t_dongle *d, t_scheduler sched)
 		left = 2 * i + 1;
 		right = 2 * i + 2;
 		smallest = i;
-		if (left < d->waiting_count
-			&& has_priority(sched, d->waiting[left], d->waiting[smallest]))
+		if (left < d->waiting_count && has_priority(sched, d->waiting[left],
+				d->waiting[smallest]))
 			smallest = left;
-		if (right < d->waiting_count
-			&& has_priority(sched, d->waiting[right], d->waiting[smallest]))
+		if (right < d->waiting_count && has_priority(sched, d->waiting[right],
+				d->waiting[smallest]))
 			smallest = right;
 		if (smallest == i)
 			break ;

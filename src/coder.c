@@ -6,7 +6,7 @@
 /*   By: mbenamar <mbenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/13 18:41:53 by mbenamar          #+#    #+#             */
-/*   Updated: 2026/08/13 22:11:56 by mbenamar         ###   ########.fr       */
+/*   Updated: 2026/08/14 18:52:36 by mbenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,11 @@
 
 int	coder_take_dongles(t_coder *coder)
 {
-	t_simulation	*sim = coder->sim;
+	t_simulation	*sim;
 	t_dongle		*first;
 	t_dongle		*second;
 
+	sim = coder->sim;
 	if (coder->id % 2 == 0)
 	{
 		first = coder->right_dongle;
@@ -39,10 +40,12 @@ int	coder_take_dongles(t_coder *coder)
 	log_event(sim, coder->id, "has taken a dongle");
 	return (1);
 }
+
 int	coder_compile(t_coder *coder)
 {
-	t_simulation *sim = coder->sim;
+	t_simulation	*sim;
 
+	sim = coder->sim;
 	pthread_mutex_lock(&sim->stop_lock);
 	coder->last_compile_start = get_current_time();
 	pthread_mutex_unlock(&sim->stop_lock);
@@ -60,8 +63,9 @@ int	coder_compile(t_coder *coder)
 
 int	coder_debug_refactor(t_coder *coder)
 {
-	t_simulation *sim = coder->sim;
+	t_simulation	*sim;
 
+	sim = coder->sim;
 	log_event(sim, coder->id, "is debugging");
 	if (!interruptible_sleep(sim, sim->config.time_to_debug))
 		return (0);
@@ -79,7 +83,7 @@ int	check_and_update_stop(t_coder *coder)
 
 	sim = coder->sim;
 	pthread_mutex_lock(&sim->stop_lock);
-	coder->compiles_done++;              // ✓ داب protégé
+	coder->compiles_done++;
 	i = 0;
 	done = 1;
 	while (i < sim->config.number_of_coders)

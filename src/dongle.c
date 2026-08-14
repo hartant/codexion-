@@ -12,7 +12,6 @@
 
 #include "../include/codexion.h"
 
-
 int	take_dongle(t_dongle *dongle, t_coder *coder)
 {
 	t_request		req;
@@ -32,8 +31,8 @@ int	take_dongle(t_dongle *dongle, t_coder *coder)
 	stop = coder->sim->stop;
 	pthread_mutex_unlock(&coder->sim->stop_lock);
 	while (!stop && (dongle->waiting[0].coder_id != coder->id
-		|| !dongle->available
-		|| dongle->last_release_time + cooldown > get_current_time()))
+			|| !dongle->available || dongle->last_release_time
+			+ cooldown > get_current_time()))
 	{
 		deadline = dongle->last_release_time + cooldown;
 		ts.tv_sec = deadline / 1000;

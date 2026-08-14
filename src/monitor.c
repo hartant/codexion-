@@ -6,7 +6,7 @@
 /*   By: mbenamar <mbenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/13 21:35:57 by mbenamar          #+#    #+#             */
-/*   Updated: 2026/08/13 21:36:00 by mbenamar         ###   ########.fr       */
+/*   Updated: 2026/08/14 18:56:02 by mbenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int	check_all_burnout(t_simulation *sim)
 void	*monitor_routine(void *arg)
 {
 	t_simulation	*sim;
-	int				stop;
+	int		stop;
 
 	sim = (t_simulation *)arg;
 	pthread_mutex_lock(&sim->stop_lock);

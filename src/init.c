@@ -6,7 +6,7 @@
 /*   By: mbenamar <mbenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/11 22:23:20 by mbenamar          #+#    #+#             */
-/*   Updated: 2026/08/13 22:11:40 by mbenamar         ###   ########.fr       */
+/*   Updated: 2026/08/14 18:54:25 by mbenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 t_simulation	*init_simulation(t_config config)
 {
-	t_simulation *sim;
-	int i;
+	t_simulation	*sim;
+	int				i;
 
 	sim = malloc(sizeof(t_simulation));
 	if (!sim)
@@ -42,7 +42,8 @@ t_simulation	*init_simulation(t_config config)
 		pthread_cond_init(&sim->dongles[i].cond, NULL);
 		sim->dongles[i].available = 1;
 		sim->dongles[i].last_release_time = 0;
-		sim->dongles[i].waiting = malloc(sizeof(t_request) * config.number_of_coders);
+		sim->dongles[i].waiting = malloc(sizeof(t_request)
+				* config.number_of_coders);
 		sim->dongles[i].waiting_count = 0;
 		sim->coders[i].id = i;
 		sim->coders[i].left_dongle = &sim->dongles[i];
@@ -55,6 +56,7 @@ t_simulation	*init_simulation(t_config config)
 	}
 	return (sim);
 }
+
 int	interruptible_sleep(t_simulation *sim, long ms)
 {
 	long	remaining;

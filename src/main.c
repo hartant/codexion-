@@ -6,12 +6,11 @@
 /*   By: mbenamar <mbenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/11 21:23:19 by mbenamar          #+#    #+#             */
-/*   Updated: 2026/08/13 22:10:44 by mbenamar         ###   ########.fr       */
+/*   Updated: 2026/08/14 18:55:31 by mbenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/codexion.h"
-
 
 int	create_threads(t_simulation *sim)
 {
@@ -20,8 +19,8 @@ int	create_threads(t_simulation *sim)
 	i = 0;
 	while (i < sim->config.number_of_coders)
 	{
-		if (pthread_create(&sim->coders[i].thread, NULL,
-				coder_routine, &sim->coders[i]) != 0)
+		if (pthread_create(&sim->coders[i].thread, NULL, coder_routine,
+				&sim->coders[i]) != 0)
 			return (0);
 		i++;
 	}
@@ -42,9 +41,9 @@ void	join_threads(t_simulation *sim)
 
 int	main(int argc, char **argv)
 {
-	t_config		config;
+	t_config	config;
 	t_simulation	*sim;
-	pthread_t		monitor_thread;
+	pthread_t	monitor_thread;
 
 	if (argc != 9)
 	{
