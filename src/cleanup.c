@@ -23,12 +23,12 @@ void	cleanup_simulation(t_simulation *sim)
 	{
 		pthread_mutex_destroy(&sim->dongles[i].lock);
 		pthread_cond_destroy(&sim->dongles[i].cond);
+		free(sim->dongles[i].waiting);   // <-- fri kol wahda JOWA loop
 		i++;
 	}
 	pthread_mutex_destroy(&sim->print_lock);
 	pthread_mutex_destroy(&sim->stop_lock);
 	free(sim->coders);
 	free(sim->dongles);
-	free(sim->dongles[i].waiting);
 	free(sim);
 }

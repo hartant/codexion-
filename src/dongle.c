@@ -13,13 +13,14 @@
 #include "../include/codexion.h"
 
 
-void	take_dongle(t_dongle *dongle, t_coder *coder)
+int	take_dongle(t_dongle *dongle, t_coder *coder)
 {
 	t_request		req;
 	long			cooldown;
 	t_scheduler		sched;
 	struct timespec	ts;
 	long			deadline;
+	int				stop;
 
 	cooldown = coder->sim->config.dongle_cooldown;
 	sched = coder->sim->config.scheduler;
@@ -27,18 +28,30 @@ void	take_dongle(t_dongle *dongle, t_coder *coder)
 	req.coder_id = coder->id;
 	req.value = get_request_value(coder);
 	heap_push(dongle, req, sched);
-	while (dongle->waiting[0].coder_id != coder->id
+	pthread_mutex_lock(&coder->sim->stop_lock);
+	stop = coder->sim->stop;
+	pthread_mutex_unlock(&coder->sim->stop_lock);
+	while (!stop && (dongle->waiting[0].coder_id != coder->id
 		|| !dongle->available
-		|| dongle->last_release_time + cooldown > get_current_time())
+		|| dongle->last_release_time + cooldown > get_current_time()))
 	{
 		deadline = dongle->last_release_time + cooldown;
 		ts.tv_sec = deadline / 1000;
 		ts.tv_nsec = (deadline % 1000) * 1000000;
 		pthread_cond_timedwait(&dongle->cond, &dongle->lock, &ts);
+		pthread_mutex_lock(&coder->sim->stop_lock);
+		stop = coder->sim->stop;
+		pthread_mutex_unlock(&coder->sim->stop_lock);
+	}
+	if (stop)
+	{
+		pthread_mutex_unlock(&dongle->lock);
+		return (0);
 	}
 	heap_pop(dongle, sched);
 	dongle->available = 0;
 	pthread_mutex_unlock(&dongle->lock);
+	return (1);
 }
 
 void	release_dongle(t_dongle *dongle)

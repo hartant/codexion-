@@ -55,3 +55,23 @@ t_simulation	*init_simulation(t_config config)
 	}
 	return (sim);
 }
+int	interruptible_sleep(t_simulation *sim, long ms)
+{
+	long	remaining;
+	long	chunk;
+	int		stop;
+
+	remaining = ms;
+	while (remaining > 0)
+	{
+		chunk = remaining < 2 ? remaining : 2;
+		usleep(chunk * 1000);
+		remaining -= chunk;
+		pthread_mutex_lock(&sim->stop_lock);
+		stop = sim->stop;
+		pthread_mutex_unlock(&sim->stop_lock);
+		if (stop)
+			return (0);
+	}
+	return (1);
+}

@@ -12,24 +12,34 @@
 
 #include "../include/codexion.h"
 
-void	coder_take_dongles(t_coder *coder)
+int	coder_take_dongles(t_coder *coder)
 {
-	t_simulation *sim = coder->sim;
+	t_simulation	*sim = coder->sim;
+	t_dongle		*first;
+	t_dongle		*second;
 
 	if (coder->id % 2 == 0)
 	{
-		take_dongle(coder->right_dongle, coder);
-		take_dongle(coder->left_dongle, coder);
+		first = coder->right_dongle;
+		second = coder->left_dongle;
 	}
 	else
 	{
-		take_dongle(coder->left_dongle, coder);
-		take_dongle(coder->right_dongle, coder);
+		first = coder->left_dongle;
+		second = coder->right_dongle;
+	}
+	if (!take_dongle(first, coder))
+		return (0);
+	log_event(sim, coder->id, "has taken a dongle");
+	if (!take_dongle(second, coder))
+	{
+		release_dongle(first);
+		return (0);
 	}
 	log_event(sim, coder->id, "has taken a dongle");
-	log_event(sim, coder->id, "has taken a dongle");
+	return (1);
 }
-void	coder_compile(t_coder *coder)
+int	coder_compile(t_coder *coder)
 {
 	t_simulation *sim = coder->sim;
 
@@ -37,19 +47,28 @@ void	coder_compile(t_coder *coder)
 	coder->last_compile_start = get_current_time();
 	pthread_mutex_unlock(&sim->stop_lock);
 	log_event(sim, coder->id, "is compiling");
-	usleep(sim->config.time_to_compile * 1000);
+	if (!interruptible_sleep(sim, sim->config.time_to_compile))
+	{
+		release_dongle(coder->left_dongle);
+		release_dongle(coder->right_dongle);
+		return (0);
+	}
 	release_dongle(coder->left_dongle);
 	release_dongle(coder->right_dongle);
+	return (1);
 }
 
-void	coder_debug_refactor(t_coder *coder)
+int	coder_debug_refactor(t_coder *coder)
 {
 	t_simulation *sim = coder->sim;
 
 	log_event(sim, coder->id, "is debugging");
-	usleep(sim->config.time_to_debug * 1000);
+	if (!interruptible_sleep(sim, sim->config.time_to_debug))
+		return (0);
 	log_event(sim, coder->id, "is refactoring");
-	usleep(sim->config.time_to_refactor * 1000);
+	if (!interruptible_sleep(sim, sim->config.time_to_refactor))
+		return (0);
+	return (1);
 }
 
 int	check_and_update_stop(t_coder *coder)
@@ -59,8 +78,8 @@ int	check_and_update_stop(t_coder *coder)
 	int				done;
 
 	sim = coder->sim;
-	coder->compiles_done++;
 	pthread_mutex_lock(&sim->stop_lock);
+	coder->compiles_done++;              // ✓ داب protégé
 	i = 0;
 	done = 1;
 	while (i < sim->config.number_of_coders)
@@ -89,9 +108,12 @@ void	*coder_routine(void *arg)
 	pthread_mutex_unlock(&sim->stop_lock);
 	while (!stop)
 	{
-		coder_take_dongles(coder);
-		coder_compile(coder);
-		coder_debug_refactor(coder);
+		if (!coder_take_dongles(coder))
+			break ;
+		if (!coder_compile(coder))
+			break ;
+		if (!coder_debug_refactor(coder))
+			break ;
 		stop = check_and_update_stop(coder);
 	}
 	return (NULL);

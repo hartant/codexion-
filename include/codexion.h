@@ -90,13 +90,13 @@ t_config        parse_args(char **argv);
 t_simulation	*init_simulation(t_config config);
 long	get_current_time(void);
 void	log_event(t_simulation *sim, int coder_id, char *message);
-void	take_dongle(t_dongle *dongle, t_coder *coder);
+int	take_dongle(t_dongle *dongle, t_coder *coder);
 void	release_dongle(t_dongle *dongle);
-void	coder_take_dongles(t_coder *coder);
-void	coder_compile(t_coder *coder);
-void	coder_debug_refactor(t_coder *coder);
+int 	coder_take_dongles(t_coder *coder);
+int 	coder_compile(t_coder *coder);
+int 	coder_debug_refactor(t_coder *coder);
 int		check_and_update_stop(t_coder *coder);
-void	*coder_routine(void *arg);
+void 	*coder_routine(void *arg);
 int		create_threads(t_simulation *sim);
 void	join_threads(t_simulation *sim);
 long	get_current_time(void);
@@ -108,7 +108,7 @@ long		get_request_value(t_coder *coder);
 int	check_coder_burnout(t_coder *coder);
 int	check_all_burnout(t_simulation *sim);
 void	*monitor_routine(void *arg);
-
+int     interruptible_sleep(t_simulation *sim, long ms);
 
 
 #endif

@@ -21,9 +21,10 @@ long	get_request_value(t_coder *coder)
 
 int	has_priority(t_scheduler sched, t_request a, t_request b)
 {
-	if (sched == fifo)
+	(void)sched;
+	if (a.value != b.value)
 		return (a.value < b.value);
-	return (a.value < b.value);
+	return (a.coder_id < b.coder_id);
 }
 
 void	heap_push(t_dongle *d, t_request req, t_scheduler sched)
